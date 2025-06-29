@@ -1,9 +1,11 @@
-const express = require("express")
+const http = require('http');
 
-const app = express()
+const app = require('./app');
 
-const port = 8080
+const {port} = require('./config/keys');
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
-})
+const server = http.createServer(app);
+
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

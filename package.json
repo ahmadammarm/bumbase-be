@@ -10,7 +10,9 @@
   "author": "Ahmad Ammar Musyaffa",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.1",
