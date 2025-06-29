@@ -5,7 +5,12 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+
+const connectMongodb = require('./config/mongoose');
+
 const app = express();
+
+connectMongodb();
 
 app.use(express.json({limit: '500mb'}));
 
