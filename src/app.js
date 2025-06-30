@@ -9,6 +9,7 @@ dotenv.config();
 const connectMongodb = require('./config/mongoose');
 
 const { authRoutes } = require('./routes');
+const { errorHandler } = require('./utils/errors');
 
 const app = express();
 
@@ -19,7 +20,10 @@ app.use(express.json({limit: '500mb'}));
 app.use(bodyParser.urlencoded({extended: true, limit: '500mb'}));
 app.use(morgan("dev"));
 
-
+// routes
 app.use("/api/v1", authRoutes);
+
+// error handler
+app.use(errorHandler);
 
 module.exports = app;
