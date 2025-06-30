@@ -4,6 +4,16 @@ const signup = async (request, response, next) => {
   try {
     const {name, email, password, role} = request.body;
 
+
+    const isEmailExists = await User.findOne({
+        email
+    });
+
+    if(isEmailExists) {
+        response.code = 400;
+        throw new Error('Email already exists');
+    }
+
     const newUser = new User({
       name,
       email,
