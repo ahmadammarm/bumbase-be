@@ -1,23 +1,25 @@
 const {User} = require('../models');
+const hashpassword = require('../utils/hashpassword/hashpassword');
 
 const signup = async (request, response, next) => {
   try {
     const {name, email, password, role} = request.body;
 
-
     const isEmailExists = await User.findOne({
-        email
+      email,
     });
 
-    if(isEmailExists) {
-        response.code = 400;
-        throw new Error('Email already exists');
+    if (isEmailExists) {
+      response.code = 400;
+      throw new Error('Email already exists');
     }
+
+    const hashedPassword = await hashpassword(password);
 
     const newUser = new User({
       name,
       email,
-      password,
+      password: hashedPassword,
       role,
     });
 
