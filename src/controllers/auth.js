@@ -1,6 +1,7 @@
 const {User} = require('../models');
 const hashpassword = require('../utils/hashpassword/hashpassword');
 const comparePassword = require('../utils/comparePassword/comparepassword');
+const generateToken = require('../utils/generatetoken');
 
 const signup = async (request, response, next) => {
   try {
@@ -62,6 +63,8 @@ const signin = async (request, response, next) => {
       throw new Error('Invalid password');
     }
 
+    const token = generateToken(user);
+
     response.status(200).json({
       code: 200,
       success: true,
@@ -71,6 +74,7 @@ const signin = async (request, response, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        token: token,
       },
     });
   } catch (error) {
