@@ -21,6 +21,18 @@ const validateSignup = [
     .withMessage('Password is required'),
 ];
 
+const validateSignin = [
+  check('email')
+    .isEmail()
+    .withMessage('Please enter a valid email address')
+    .notEmpty()
+    .withMessage('Email is required')
+    .normalizeEmail(),
+
+  check('password').notEmpty().withMessage('Password is required'),
+];
+
 module.exports = {
   validateSignup,
+  validateSignin,
 };
