@@ -1,5 +1,6 @@
 const {User} = require('../models');
 const hashpassword = require('../utils/hashpassword/hashpassword');
+const comparePassword = require('../utils/comparePassword/comparepassword');
 
 const signup = async (request, response, next) => {
   try {
@@ -41,6 +42,43 @@ const signup = async (request, response, next) => {
   }
 };
 
+const signin = async (request, response, next) => {
+  try {
+    const {email, password} = request.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      response.code = 400;
+      throw new Error('Invalid email');
+    }
+
+    const isPasswordValid = await comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      response.code = 400;
+      throw new Error('Invalid password');
+    }
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'User signed in successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
+  signin,
 };
