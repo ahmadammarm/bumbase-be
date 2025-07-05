@@ -32,7 +32,17 @@ const validateSignin = [
   check('password').notEmpty().withMessage('Password is required'),
 ];
 
+const emailValidator = [
+  check('email')
+    .isEmail()
+    .withMessage('Please enter a valid email address')
+    .notEmpty()
+    .withMessage('Email is required')
+    .normalizeEmail(),
+];
+
 module.exports = {
   validateSignup,
   validateSignin,
+  emailValidator,
 };
