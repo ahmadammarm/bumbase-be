@@ -2,6 +2,8 @@ const {User} = require('../models');
 const hashpassword = require('../utils/hashpassword/hashpassword');
 const comparePassword = require('../utils/comparePassword/comparepassword');
 const generateToken = require('../utils/generatetoken');
+const generateCode = require('../utils/generatecode');
+const sendEmail = require('../utils/sendemail');
 
 const signup = async (request, response, next) => {
   try {
@@ -82,7 +84,50 @@ const signin = async (request, response, next) => {
   }
 };
 
+const verifyCode = async (request, response, next) => {
+  try {
+    const {email} = request.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    if (user.isVerified === true) {
+      response.code = 400;
+      throw new Error('User is already verified');
+    }
+
+    const code = generateCode(6);
+
+    user.verficationCode = code;
+    await user.save();
+
+    await sendEmail({
+      emailTo: user.email,
+      subject: 'Verification Code',
+      code: code,
+      text: 'verify your account',
+    });
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Verification code sent successfully',
+      verificationCode: code,
+    });
+  } catch (error) {
+    console.error('Error verifying code:', error);
+    throw new Error('Verification failed');
+  }
+};
+
 module.exports = {
   signup,
   signin,
+  verifyCode,
 };
