@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  forgotPasswordCode: String
 });
 
 const User = mongoose.model('user', userSchema);

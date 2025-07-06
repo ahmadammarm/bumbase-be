@@ -20,5 +20,6 @@ router.post(
   authController.verifyCode,
 );
 router.post('/auth/verification', verifyUserValidator, authController.verifyUser, validate );
+router.post('/auth/forgot-password-code', emailValidator, authController.forgotPasswordCode);
 
 module.exports = router;
