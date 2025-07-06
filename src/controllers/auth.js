@@ -118,11 +118,14 @@ const verifyCode = async (request, response, next) => {
       code: 200,
       success: true,
       message: 'Verification code sent successfully',
-      verificationCode: code,
     });
   } catch (error) {
-    console.error('Error verifying code:', error);
-    throw new Error('Verification failed');
+    response.json({
+      code: response.code || 500,
+      success: false,
+      message: error.message || 'Internal Server Error',
+    });
+    next(error);
   }
 };
 
@@ -196,7 +199,6 @@ const forgotPasswordCode = async (request, response, next) => {
       code: 200,
       success: true,
       message: 'Forgot password code sent successfully',
-      forgotPasswordCode: code,
     });
   } catch (error) {
     next(error);
