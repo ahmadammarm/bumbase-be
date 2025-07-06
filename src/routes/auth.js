@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 const express = require('express');
 const router = express.Router();
 const {
   validateSignup,
   validateSignin,
   emailValidator,
+  verifyUserValidator,
 } = require('../utils/validators/auth');
 const validate = require('../utils/validators/validate');
 
@@ -17,5 +19,6 @@ router.post(
   validate,
   authController.verifyCode,
 );
+router.post('/auth/verification', verifyUserValidator, authController.verifyUser, validate );
 
 module.exports = router;
