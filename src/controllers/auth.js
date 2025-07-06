@@ -126,8 +126,50 @@ const verifyCode = async (request, response, next) => {
   }
 };
 
+const verifyUser = async (request, response, next) => {
+  try {
+    const {email, code} = request.body;
+    const user = await User.findOne({
+      email,
+    });
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    if (user.isVerified === true) {
+      response.code = 400;
+      throw new Error('User is already verified');
+    }
+
+    if (user.verficationCode !== code) {
+      response.code = 400;
+      throw new Error('Invalid verification code');
+    }
+
+    user.isVerified = true;
+    user.verficationCode = null;
+    await user.save();
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'User verified successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   signin,
   verifyCode,
+  verifyUser,
 };

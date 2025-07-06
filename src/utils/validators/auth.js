@@ -41,8 +41,20 @@ const emailValidator = [
     .normalizeEmail(),
 ];
 
+const verifyUserValidator = [
+  check('email')
+    .isEmail()
+    .withMessage('Please enter a valid email address')
+    .notEmpty()
+    .withMessage('Email is required')
+    .normalizeEmail(),
+
+  check('code').notEmpty().withMessage('Verification code is required'),
+];
+
 module.exports = {
   validateSignup,
   validateSignin,
   emailValidator,
+  verifyUserValidator,
 };
