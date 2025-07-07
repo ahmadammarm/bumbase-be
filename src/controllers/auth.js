@@ -205,10 +205,51 @@ const forgotPasswordCode = async (request, response, next) => {
   }
 };
 
+const recoverPassword = async (request, response, next) => {
+  try {
+    const {email, code, password} = request.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    if (user.forgotPasswordCode !== code) {
+      response.code = 400;
+      throw new Error('Invalid forgot password code');
+    }
+
+    const hashedPassword = await hashpassword(password);
+
+    user.password = hashedPassword;
+    user.forgotPasswordCode = null;
+    await user.save();
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Password reset successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   signin,
   verifyCode,
   verifyUser,
   forgotPasswordCode,
+  recoverPassword,
 };
