@@ -255,8 +255,8 @@ const recoverPassword = async (request, response, next) => {
 const changePassword = async (request, response, next) => {
   try {
     const {oldPassword, newPassword} = request.body;
-    const userId = request.user.id;
 
+    const userId = request.user.id;
     const user = await User.findById(userId);
 
     if (!user) {
@@ -272,6 +272,11 @@ const changePassword = async (request, response, next) => {
     if (!isOldPasswordValid) {
       response.code = 400;
       throw new Error('Invalid old password');
+    }
+
+    if (oldPassword === newPassword) {
+      response.code = 400;
+      throw new Error('New password cannot be the same as old password');
     }
 
     const hashedNewPassword = await hashpassword(newPassword);
