@@ -256,11 +256,8 @@ const changePassword = async (request, response, next) => {
   try {
     const {oldPassword, newPassword} = request.body;
 
-    const {email} = request.user;
-
-    const user = await User.findOne({
-      email,
-    });
+    const userId = request.user.id;
+    const user = await User.findById(userId);
 
     if (!user) {
       response.code = 404;
