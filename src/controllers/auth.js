@@ -5,6 +5,7 @@ const generateToken = require('../utils/generatetoken');
 const generateCode = require('../utils/generatecode');
 const sendEmail = require('../utils/sendemail');
 
+// sign up method
 const signup = async (request, response, next) => {
   try {
     const {name, email, password, role} = request.body;
@@ -45,6 +46,7 @@ const signup = async (request, response, next) => {
   }
 };
 
+// sign in method
 const signin = async (request, response, next) => {
   try {
     const {email, password} = request.body;
@@ -84,6 +86,7 @@ const signin = async (request, response, next) => {
   }
 };
 
+// email verification method
 const verifyCode = async (request, response, next) => {
   try {
     const {email} = request.body;
@@ -129,6 +132,7 @@ const verifyCode = async (request, response, next) => {
   }
 };
 
+// user verification method
 const verifyUser = async (request, response, next) => {
   try {
     const {email, code} = request.body;
@@ -170,6 +174,7 @@ const verifyUser = async (request, response, next) => {
   }
 };
 
+// forgot password code method
 const forgotPasswordCode = async (request, response, next) => {
   try {
     const {email} = request.body;
@@ -205,6 +210,7 @@ const forgotPasswordCode = async (request, response, next) => {
   }
 };
 
+// recover password method
 const recoverPassword = async (request, response, next) => {
   try {
     const {email, code, password} = request.body;
@@ -245,9 +251,44 @@ const recoverPassword = async (request, response, next) => {
   }
 };
 
+// change password method
 const changePassword = async (request, response, next) => {
   try {
-    response.json(request.user);
+    const {oldPassword, newPassword} = request.body;
+    const userId = request.user.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    const isOldPasswordValid = await comparePassword(
+      oldPassword,
+      user.password,
+    );
+
+    if (!isOldPasswordValid) {
+      response.code = 400;
+      throw new Error('Invalid old password');
+    }
+
+    const hashedNewPassword = await hashpassword(newPassword);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Password changed successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     next(error);
   }
