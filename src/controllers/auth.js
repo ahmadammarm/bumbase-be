@@ -197,7 +197,7 @@ const forgotPasswordCode = async (request, response, next) => {
       emailTo: user.email,
       subject: 'Forgot Password Code',
       code: code,
-      text: 'Use this code to reset your password',
+      text: 'reset your password',
     });
 
     response.status(200).json({
