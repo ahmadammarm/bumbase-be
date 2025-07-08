@@ -7,7 +7,7 @@ dotenv.config();
 
 const connectMongodb = require('./config/mongoose');
 
-const {authRoutes} = require('./routes');
+const {authRoutes, categoryRoutes} = require('./routes');
 const {geminiRoutes} = require('./routes');
 const {errorHandler} = require('./utils/errors');
 const notfound = require('./controllers/notfound');
@@ -24,6 +24,7 @@ app.use(morgan('dev'));
 // routes
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', geminiRoutes);
+app.use('/api/v1', categoryRoutes);
 
 // not found handler
 app.use(notfound);
