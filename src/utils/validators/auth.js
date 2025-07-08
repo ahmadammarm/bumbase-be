@@ -79,6 +79,17 @@ const changePasswordValidator = [
   check('newPassword').notEmpty().withMessage('New password is required'),
 ];
 
+const updateProfileValidator = [
+  check('email').custom(async email => {
+    if (email) {
+      if (!/^[a-zA-Z0-9]+@[gG][mM][aA][iI][lL]\.com$/.test(email)) {
+        throw new Error('Please enter a valid Gmail address');
+      }
+      email = email.toLowerCase();
+    }
+  }),
+];
+
 module.exports = {
   validateSignup,
   validateSignin,
@@ -86,4 +97,5 @@ module.exports = {
   verifyUserValidator,
   recoverPasswordValidator,
   changePasswordValidator,
+  updateProfileValidator,
 };
