@@ -29,7 +29,7 @@ router.post('/auth/forgot-password-code', rateLimiter, emailValidator, validate,
 router.post('/auth/recover-password', recoverPasswordValidator, validate, authController.recoverPassword);
 
 // change password
-router.put('/auth/change-password', changePasswordValidator, validate, isAuthenticated, authController.changePassword);
+router.put('/auth/change-password', isAuthenticated, changePasswordValidator, validate, authController.changePassword);
 
 router.put('/auth/update-profile', isAuthenticated, updateProfileValidator, validate, authController.updateProfile);
 

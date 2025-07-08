@@ -4,12 +4,14 @@ const {categoryController} = require('../controllers');
 const {addCategoryValidator} = require('../utils/validators/category');
 const validate = require('../utils/validators/validate');
 const isAuthenticated = require('../middlewares/isAuthenticated');
+const isAdmin = require('../middlewares/isAdmin');
 
 router.post(
   '/category',
+  isAuthenticated,
+  isAdmin,
   addCategoryValidator,
   validate,
-  isAuthenticated,
   categoryController.addCategory,
 );
 
