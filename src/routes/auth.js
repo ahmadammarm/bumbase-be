@@ -8,6 +8,7 @@ const {
   verifyUserValidator,
   recoverPasswordValidator,
   changePasswordValidator,
+  updateProfileValidator,
 } = require('../utils/validators/auth');
 const validate = require('../utils/validators/validate');
 
@@ -29,5 +30,7 @@ router.post('/auth/recover-password', recoverPasswordValidator, validate, authCo
 
 // change password
 router.put('/auth/change-password', changePasswordValidator, validate, isAuthenticated, authController.changePassword);
+
+router.put('/auth/update-profile', isAuthenticated, updateProfileValidator, validate, authController.updateProfile);
 
 module.exports = router;

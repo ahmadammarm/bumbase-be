@@ -299,6 +299,49 @@ const changePassword = async (request, response, next) => {
   }
 };
 
+const updateProfile = async (request, response, next) => {
+  try {
+    const userId = request.user.id;
+    const {name, email} = request.body || {};
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    if (email && email !== user.email) {
+      const isEmailExists = await User.findOne({
+        email,
+      });
+      if (isEmailExists) {
+        response.code = 400;
+        throw new Error('Email already exists');
+      }
+    }
+
+    user.name = name ? name : user.name;
+    user.email = email ? email : user.email;
+
+    await user.save();
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -307,4 +350,5 @@ module.exports = {
   forgotPasswordCode,
   recoverPassword,
   changePassword,
+  updateProfile,
 };
