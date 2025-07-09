@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 const {Category, User} = require('../models');
 
 const getCategories = async (request, response, next) => {
   try {
     const {search} = request.query;
 
-    let searchCategory = {};
+    let searchCategory = {isDeleted: {$ne: true}};
 
     if (search) {
       const regex = RegExp(search, 'i');
@@ -169,7 +170,7 @@ const updateCategory = async (request, response, next) => {
     next(error);
   }
 };
-const deleteCategory = async (request, response, next) => {
+const deleteCategoryById = async (request, response, next) => {
   try {
     const {id} = request.params;
 
@@ -183,7 +184,10 @@ const deleteCategory = async (request, response, next) => {
       });
     }
 
-    await Category.deleteOne({_id: id});
+    await category.updateOne({
+      isDeleted: true,
+      deletedAt: new Date(),
+    });
 
     response.status(200).json({
       code: 200,
@@ -195,10 +199,31 @@ const deleteCategory = async (request, response, next) => {
   }
 };
 
+const deleteAllCategories = async (_, response, next) => {
+  try {
+    await Category.updateMany(
+      {isDeleted: false},
+      {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    );
+
+    return response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'All categories deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getCategories,
   addCategory,
   getCategoryById,
   updateCategory,
-  deleteCategory,
+  deleteCategoryById,
+  deleteAllCategories,
 };

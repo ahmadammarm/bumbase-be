@@ -16,7 +16,8 @@ router.get('/admin/category', isAuthenticated, isAdmin, categoryController.getCa
 router.post('/admin/category', isAuthenticated, isAdmin, addCategoryValidator, validate, categoryController.addCategory);
 router.get('/admin/category/:id', isAuthenticated, isAdmin, categoryIdValidator, validate, categoryController.getCategoryById);
 router.put('/admin/category/:id', isAuthenticated, isAdmin, categoryIdValidator, validate, categoryController.updateCategory);
-router.delete('/admin/category/:id', isAuthenticated, isAdmin, categoryIdValidator, validate, categoryController.deleteCategory);
+router.delete('/admin/category/:id', isAuthenticated, isAdmin, categoryIdValidator, validate, categoryController.deleteCategoryById);
+router.delete('/admin/category', isAuthenticated, isAdmin, categoryController.deleteAllCategories);
 
 // category routes for all authenticated users (author and user role)
 router.get('/category', isAuthenticated, categoryController.getCategories);
