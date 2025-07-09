@@ -31,6 +31,7 @@ router.post('/auth/recover-password', recoverPasswordValidator, validate, authCo
 // change password
 router.put('/auth/change-password', isAuthenticated, changePasswordValidator, validate, authController.changePassword);
 
+// update profile
 router.put('/auth/update-profile', isAuthenticated, updateProfileValidator, validate, authController.updateProfile);
 
 module.exports = router;
