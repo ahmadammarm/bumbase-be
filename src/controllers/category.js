@@ -2,7 +2,21 @@ const {Category, User} = require('../models');
 
 const getCategories = async (request, response, next) => {
   try {
-    const categories = await Category.find().sort({createdAt: -1});
+    const {search} = request.query;
+
+    let searchCategory = {};
+
+    if (search) {
+      const regex = RegExp(search, 'i');
+
+      searchCategory = {
+        $or: [{title: {$regex: regex}}],
+      };
+    }
+
+    const categories = await Category.find(searchCategory).sort({
+      createdAt: -1,
+    });
 
     if (categories.length === 0) {
       return response.status(404).json({
