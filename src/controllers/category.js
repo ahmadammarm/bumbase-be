@@ -1,11 +1,15 @@
+/* eslint-disable radix */
 /* eslint-disable prettier/prettier */
 const {Category, User} = require('../models');
 
 const getCategories = async (request, response, next) => {
   try {
-    const {search} = request.query;
+    const {search, size, page} = request.query;
 
     let searchCategory = {isDeleted: {$ne: true}};
+
+    const sizeNumber = parseInt(size) || 10;
+    const pageNumber = parseInt(page) || 1;
 
     if (search) {
       const regex = RegExp(search, 'i');
@@ -15,9 +19,13 @@ const getCategories = async (request, response, next) => {
       };
     }
 
-    const categories = await Category.find(searchCategory).sort({
-      createdAt: -1,
-    });
+    const totalCategories = await Category.countDocuments(searchCategory);
+    const totalPages = Math.ceil(totalCategories / sizeNumber);
+
+    const categories = await Category.find(searchCategory)
+      .skip((pageNumber - 1) * sizeNumber)
+      .limit(sizeNumber)
+      .sort({updatedBy: -1});
 
     if (categories.length === 0) {
       return response.status(404).json({
@@ -31,7 +39,12 @@ const getCategories = async (request, response, next) => {
       code: 200,
       success: true,
       message: 'Categories retrieved successfully',
-      data: categories,
+      data: {
+        categories,
+        totalCategories,
+        totalPages,
+        currentPage: pageNumber,
+      },
     });
   } catch (error) {
     next(error);
