@@ -1,5 +1,28 @@
 const {Category, User} = require('../models');
 
+const getCategories = async (request, response, next) => {
+  try {
+    const categories = await Category.find().sort({createdAt: -1});
+
+    if (categories.length === 0) {
+      return response.status(404).json({
+        code: 404,
+        success: false,
+        message: 'No categories found',
+      });
+    }
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Categories retrieved successfully',
+      data: categories,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const addCategory = async (request, response, next) => {
   try {
     const {title, description} = request.body;
@@ -52,6 +75,64 @@ const addCategory = async (request, response, next) => {
   }
 };
 
+const updateCategory = async (request, response, next) => {
+  try {
+    const {id} = request.params;
+    const userId = request.user.id;
+
+    const {title, description} = request.body || {};
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return response.status(404).json({
+        code: 404,
+        success: false,
+        message: 'Category not found',
+      });
+    }
+
+    const isCategoryExist = await Category.findOne({
+      title,
+    });
+
+    if (
+      isCategoryExist &&
+      isCategoryExist.title === title &&
+      String(isCategoryExist._id) !== String(category._id)
+    ) {
+      return response.status(400).json({
+        code: 400,
+        success: false,
+        message: 'Category with this title already exists',
+      });
+    }
+    category.title = title ? title : category.title;
+    category.description = description ? description : category.description;
+    category.updatedBy = userId;
+
+    await category.save();
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Category updated successfully',
+      data: {
+        id: category._id,
+        title: category.title,
+        description: category.description,
+        updatedBy: userId,
+        createdAt: category.createdAt,
+        updatedAt: category.updatedAt,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
+  getCategories,
   addCategory,
+  updateCategory,
 };
