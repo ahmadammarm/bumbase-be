@@ -75,6 +75,31 @@ const addCategory = async (request, response, next) => {
   }
 };
 
+const getCategoryById = async (request, response, next) => {
+  try {
+    const {id} = request.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return response.status(404).json({
+        code: 404,
+        success: false,
+        message: 'Category not found',
+      });
+    }
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Category retrieved successfully',
+      data: category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateCategory = async (request, response, next) => {
   try {
     const {id} = request.params;
@@ -130,9 +155,36 @@ const updateCategory = async (request, response, next) => {
     next(error);
   }
 };
+const deleteCategory = async (request, response, next) => {
+  try {
+    const {id} = request.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return response.status(404).json({
+        code: 404,
+        success: false,
+        message: 'Category not found',
+      });
+    }
+
+    await Category.deleteOne({_id: id});
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Category deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getCategories,
   addCategory,
+  getCategoryById,
   updateCategory,
+  deleteCategory,
 };
