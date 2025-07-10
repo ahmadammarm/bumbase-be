@@ -7,5 +7,6 @@ const upload = require("../middlewares/fileUpload");
 const router = express.Router();
 
 router.post('/file/upload', isAuthenticated, isAdmin, upload.single("image"), fileController.fileUpload)
+router.delete('/file/delete/:id', isAuthenticated, isAdmin, fileController.fileDelete)
 
 module.exports = router
