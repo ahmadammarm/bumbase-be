@@ -1,6 +1,7 @@
 const path = require('path');
 const {validateExtension} = require('../utils/validators/file');
 const {File} = require('../models');
+const fs = require('fs').promises;
 
 const fileUpload = async (request, response, next) => {
   try {
@@ -49,6 +50,35 @@ const fileUpload = async (request, response, next) => {
   }
 };
 
+const fileDelete = async (request, response, next) => {
+  try {
+    const {id} = request.params;
+
+    const file = await File.findById(id);
+    if (!file) {
+      response.code = 404;
+      throw new Error('File not found');
+    }
+
+    const filePath = path.join(__dirname, '../../src/uploads', file.filename);
+
+    await fs.unlink(filePath).catch(err => {
+      if (err.code !== 'ENOENT') throw err;
+    });
+
+    await File.deleteOne({_id: id});
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'File deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   fileUpload,
+  fileDelete,
 };
