@@ -32,7 +32,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  forgotPasswordCode: String
+  forgotPasswordCode: String,
+  profilePicture: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'file',
+  }
 });
 
 const User = mongoose.model('user', userSchema);
