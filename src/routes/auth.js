@@ -34,4 +34,7 @@ router.put('/auth/change-password', isAuthenticated, changePasswordValidator, va
 // update profile
 router.put('/auth/update-profile', isAuthenticated, updateProfileValidator, validate, authController.updateProfile);
 
+// current user
+router.get('/auth/current-user', isAuthenticated, authController.currentUser);
+
 module.exports = router;

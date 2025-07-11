@@ -351,6 +351,30 @@ const updateProfile = async (request, response, next) => {
   }
 };
 
+const currentUser = async (request, response, next) => {
+  try {
+    const userId = request.user.id;
+
+    const user = await User.findById(userId)
+      .select('-password -verficationCode -forgotPasswordCode')
+      .populate('profilePicture');
+
+    if (!user) {
+      response.code = 404;
+      throw new Error('User not found');
+    }
+
+    response.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Current user fetched successfully',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -360,4 +384,5 @@ module.exports = {
   recoverPassword,
   changePassword,
   updateProfile,
+  currentUser,
 };
