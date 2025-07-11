@@ -1,4 +1,4 @@
-const {User} = require('../models');
+const {User, File} = require('../models');
 const hashpassword = require('../utils/hashpassword/hashpassword');
 const comparePassword = require('../utils/comparePassword/comparepassword');
 const generateToken = require('../utils/generatetoken');
@@ -302,7 +302,7 @@ const changePassword = async (request, response, next) => {
 const updateProfile = async (request, response, next) => {
   try {
     const userId = request.user.id;
-    const {name, email} = request.body || {};
+    const {name, email, profilePicture} = request.body || {};
 
     const user = await User.findById(userId);
 
@@ -321,8 +321,17 @@ const updateProfile = async (request, response, next) => {
       }
     }
 
+    if (profilePicture) {
+      const file = await File.findById(profilePicture);
+      if (!file) {
+        response.code = 404;
+        throw new Error('File not found');
+      }
+    }
+
     user.name = name ? name : user.name;
     user.email = email ? email : user.email;
+    user.profilePicture = profilePicture;
 
     await user.save();
 
