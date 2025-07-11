@@ -11,7 +11,9 @@ services:
     ports:
       - '8000:8000'
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
+
     environment:
       MONGODB_URI: ${MONGODB_URI}
       JWT_SECRET: ${JWT_SECRET}
@@ -29,6 +31,12 @@ services:
     volumes:
       - mongodb_data:/data/db
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 volumes:
   mongodb_data:
