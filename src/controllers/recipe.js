@@ -185,4 +185,7 @@ const getRecipeById = async (request, response, next) => {
 module.exports = {
   getAllRecipes,
   addRecipe,
+  updateRecipe,
+  deleteRecipe,
+  getRecipeById,
 };
