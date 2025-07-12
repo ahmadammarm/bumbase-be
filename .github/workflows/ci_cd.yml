@@ -49,8 +49,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Get short commit hash
-        id: vars
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -58,5 +58,7 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: ${{ secrets.DOCKER_USERNAME }}/bumbase-be:${{ env.SHA_SHORT }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/bumbase-be:${{ env.SHA_SHORT }}
+            ${{ secrets.DOCKER_USERNAME }}/bumbase-be:latest
 
