@@ -1,8 +1,10 @@
 name: CI/CD - Build & Push Docker Image
 
 on:
-  workflow_call:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
