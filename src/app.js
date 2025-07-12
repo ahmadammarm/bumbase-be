@@ -12,6 +12,7 @@ const {
   categoryRoutes,
   fileRoutes,
   recipeRoutes,
+  healthCheck,
 } = require('./routes');
 const {geminiRoutes} = require('./routes');
 const {errorHandler} = require('./utils/errors');
@@ -32,6 +33,7 @@ app.use('/api/v1', geminiRoutes);
 app.use('/api/v1', categoryRoutes);
 app.use('/api/v1', fileRoutes);
 app.use('/api/v1', recipeRoutes);
+app.use('/', healthCheck)
 
 // not found handler
 app.use(notfound);

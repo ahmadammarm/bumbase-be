@@ -13,15 +13,19 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
-
     environment:
       MONGODB_URI: ${MONGODB_URI}
       JWT_SECRET: ${JWT_SECRET}
       EMAIL_USER: ${EMAIL_USER}
       EMAIL_PASS: ${EMAIL_PASS}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
-    command: npm start
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 10s
 
   mongodb:
     image: mongo:latest
@@ -36,7 +40,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 
 volumes:
   mongodb_data:
