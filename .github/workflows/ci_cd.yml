@@ -58,6 +58,5 @@ jobs:
           context: .
           push: true
           file: Dockerfile
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/bumbase-be:${{ env.SHA_SHORT }}
-            ${{ secrets.DOCKER_USERNAME }}/bumbase-be:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/bumbase-be:${{ env.SHA_SHORT }}
+
