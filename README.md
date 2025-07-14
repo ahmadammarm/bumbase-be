@@ -18,11 +18,11 @@ Backend project for blog based food recipe application.
 - *Middleware*: Implements JWT authentication and request rate limiting.
 - *CRUD Implementation*: Implements full Create, Read, Update, and Delete (CRUD) logic for model entities.
 - *Email Verification*: Uses Nodemailer with SMTP to send user verification emails.
-- *Configuration*: Supports environment variables configuration via .env files.
+- *Environment Configuration*: Supports environment variables configuration via .env files.
 - *CORS Support*: Enables Cross-Origin Resource Sharing (CORS) configuration.
-- *Deployment*: Supports containerized deployment using Docker.
+- *Deployment*: Supports containerized development and deployment via Docker.
 
-## REST API Design
+## 📡 REST API Overview
 
 This project provides a RESTful API for managing categories and recipes, following standard REST conventions.
 
@@ -140,6 +140,12 @@ The project will be available at:
 
 http://localhost:8000
 
-### This project also available for your contributions, thank you :)
+### 🌱 Contributing
+Contributions are welcome! Feel free to fork the repository and submit a pull request.
+
+
+### 🔗 Frontend Project
+You can find the frontend repository here: <br>
+<a href="https://github.com/ahmadammarm/bumbase-fe">Bumbase Frontend</a>
 
 
