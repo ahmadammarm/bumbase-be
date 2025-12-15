@@ -8,9 +8,9 @@ const validate = (req, res, next) => {
   if (Object.keys(errors.errors).length === 0) {
     next();
   } else {
-    errors.errors.map((error) => {
-        mappedErrors[error.path] = error.msg;
-    })
+    errors.errors.map(error => {
+      mappedErrors[error.path] = error.msg;
+    });
 
     res.status(400).json(mappedErrors);
   }
